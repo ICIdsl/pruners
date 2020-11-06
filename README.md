@@ -2,8 +2,8 @@ Pruning a Custom Network
 ========================
 - Pruning has been implemented for the following types of structural modules and networks:
     * Sequential Connectivity - AlexNet, VGG
-    * Residuals - ResNet
-    * Depth-wise convolutions - MobileNetV2, MNasNet
+    * Residuals - ResNet18, ResNet20, ResNet50
+    * Depth-wise convolutions - MobileNetV2, MNasNet 
     * Fire modules - SqueezeNet
     * Inception modules - GoogLeNet
 
