@@ -28,7 +28,6 @@ import torch
 import torch.nn as nn
 
 class BasicPruning(ABC):
-#{{{
     def __init__(self, params, model):
     #{{{
         self.params = params
@@ -38,7 +37,7 @@ class BasicPruning(ABC):
 
         self.metricValues = []
         self.channelsToPrune = {}
-        self.gpu_list = [int(x) for x in self.params.gpu_id.split(',')]
+        # self.gpu_list = [int(x) for x in self.params.gpu_id.split(',')]
         
         self.totalParams = 0
         self.layerSizes = {}
@@ -112,7 +111,7 @@ class BasicPruning(ABC):
         module = importlib.import_module(self.importPath)
         pModel = module.__dict__[self.netName]
         prunedModel = pModel(num_classes=100)
-        prunedModel = torch.nn.DataParallel(prunedModel, self.gpu_list).cuda()
+        # prunedModel = torch.nn.DataParallel(prunedModel, self.gpu_list).cuda()
         return prunedModel
     #}}}
     
@@ -434,4 +433,3 @@ class BasicPruning(ABC):
         else:
             return False
     #}}}
-#}}}
