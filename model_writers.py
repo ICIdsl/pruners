@@ -87,6 +87,7 @@ class Writer(object):
     def write_module_desc(self, modName, module):
     #{{{
         layerName = '_'.join(modName.split('.')[1:])
+        # layerName = modName.replace('.','_')
         mod = '\t\tself.{} = nn.{}'.format(layerName, str(module))
         self.toWrite['modules'].append(mod)
     #}}}
@@ -94,6 +95,7 @@ class Writer(object):
     def write_module_forward(self, modName):
     #{{{
         layerName = '_'.join(modName.split('.')[1:])
+        # layerName = modName.replace('.','_')
         forward = '\t\t{} = self.{}({})'.format(self.forVar, layerName, self.forVar) 
         self.toWrite['forward'].append(forward)
     #}}}

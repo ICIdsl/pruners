@@ -102,6 +102,7 @@ def nn_linear(wtu, modName, module):
     ipChannelsKept = list(set(allIpChannels) - set(wtu.ipChannelsPruned))
     
     key = 'module.{}'.format('_'.join(modName.split('.')[1:]))
+    # key = 'module.{}'.format(modName.replace('.','_'))
     # allIpChannels = list(range(module.in_features))
     # ipChannelsKept = list(set(allIpChannels) - set(wtu.ipChannelsPruned))
     # wtu.pModel['{}.weight'.format(key)] = module._parameters['weight'][:,ipChannelsKept]

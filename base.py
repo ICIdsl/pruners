@@ -53,7 +53,8 @@ class BasicPruning(ABC):
         self.depBlock = dependSrc.DependencyBlock(model)
         self.get_layer_params()
 
-        self.importPath = '{}.{}.{}'.format('.'.join(params.pruner['project_dir'].split('/')), '.'.join(self.dirName.split('/')), self.fileName.split('.')[0])
+        # self.importPath = '{}.{}.{}'.format('.'.join(params.pruner['project_dir'].split('/')), '.'.join(self.dirName.split('/')), self.fileName.split('.')[0])
+        self.importPath = '{}.{}'.format('.'.join(self.dirName.split('/')), self.fileName.split('.')[0])
     #}}} 
     
     def get_layer_params(self):
@@ -102,8 +103,7 @@ class BasicPruning(ABC):
         importPath.append('pruned_model')
         self.importPath = '.'.join(importPath)
         prunedModel = self.import_pruned_model()
-        optimiser = torch.optim.SGD(prunedModel.parameters(), lr=self.params.lr, momentum=self.params.momentum, weight_decay=self.params.weight_decay)
-        return prunedModel, optimiser
+        return prunedModel
     #}}}
 
     def import_pruned_model(self):
@@ -111,7 +111,7 @@ class BasicPruning(ABC):
         module = importlib.import_module(self.importPath)
         pModel = module.__dict__[self.netName]
         prunedModel = pModel(num_classes=100)
-        # prunedModel = torch.nn.DataParallel(prunedModel, self.gpu_list).cuda()
+        prunedModel = torch.nn.DataParallel(prunedModel)
         return prunedModel
     #}}}
     
@@ -126,8 +126,7 @@ class BasicPruning(ABC):
             prunedModel = self.transfer_weights(model, prunedModel)
             pruneRate, prunedSize, origSize = self.prune_rate(prunedModel)
             print('Pruned Percentage = {:.2f}%, NewModelSize = {:.2f}MB, OrigModelSize = {:.2f}MB'.format(pruneRate, prunedSize, origSize))
-            optimiser = torch.optim.SGD(prunedModel.parameters(), lr=self.params.lr, momentum=self.params.momentum, weight_decay=self.params.weight_decay)
-            return channelsPruned, prunedModel, optimiser
+            return channelsPruned, prunedModel
         
         elif self.params.pruner['mode'] == 'random':
             tqdm.write("Pruning filters: random")
@@ -137,21 +136,20 @@ class BasicPruning(ABC):
             prunedModel = self.transfer_weights(model, prunedModel)
             pruneRate, prunedSize, origSize = self.prune_rate(prunedModel)
             print('Pruned Percentage = {:.2f}%, NewModelSize = {:.2f}MB, OrigModelSize = {:.2f}MB'.format(pruneRate, prunedSize, origSize))
-            optimiser = torch.optim.SGD(prunedModel.parameters(), lr=self.params.lr, momentum=self.params.momentum, weight_decay=self.params.weight_decay)
-            return channelsPruned, prunedModel, optimiser
+            return channelsPruned, prunedModel
         
         elif self.params.pruner['mode'] == 'random_weighted': 
             tqdm.write("Pruning filters: random_weighted")
             if pruneNum is not None: 
                 self.filePath = self.filePath.split('.')[0] + f"_{pruneNum}.py"
-                self.importPath = '{}.{}.{}'.format('.'.join(self.params.pruner['project_dir'].split('/')), '.'.join(self.dirName.split('/')), f"{self.fileName.split('.')[0]}_{pruneNum}")
+                # self.importPath = '{}.{}.{}'.format('.'.join(self.params.pruner['project_dir'].split('/')), '.'.join(self.dirName.split('/')), f"{self.fileName.split('.')[0]}_{pruneNum}")
+                self.importPath = '{}.{}.{}'.format('.'.join(self.dirName.split('/')), f"{self.fileName.split('.')[0]}_{pruneNum}")
             channelsPruned = self.random_weighted_selection(model)
             self.write_net()
             prunedModel = self.import_pruned_model()
             pruneRate, prunedSize, origSize = self.prune_rate(prunedModel)
             print('Pruned Percentage = {:.2f}%, NewModelSize = {:.2f}MB, OrigModelSize = {:.2f}MB'.format(pruneRate, prunedSize, origSize))
-            optimiser = torch.optim.SGD(prunedModel.parameters(), lr=self.params.lr, momentum=self.params.momentum, weight_decay=self.params.weight_decay)
-            return channelsPruned, prunedModel, optimiser
+            return channelsPruned, prunedModel
      #}}}
         
     def non_zero_argmin(self, array): 
@@ -232,7 +230,8 @@ class BasicPruning(ABC):
             # if layer not in group, just remove filter from layer 
             # if layer is in a dependent group remove corresponding filter from each layer
             depLayers = [layerName] if depLayers == [] else depLayers
-            netInst = type(self.model.module)
+            # netInst = type(self.model.module)
+            netInst = type(self.model)
             if hasattr(self.depBlock, 'ignore'): 
                 ignoreLayers = any(x in self.depBlock.ignore[netInst] for x in depLayers)
             else:
@@ -273,7 +272,8 @@ class BasicPruning(ABC):
             layerName = '.'.join(p[0].split('.')[:-1])
             # if layerName in self.depBlock.linkedConvAndFc.keys() and layerName not in layers:
             if layerName in self.depBlock.linkedConvs.keys() and layerName not in layers:
-                netInst = type(self.model.module)
+                # netInst = type(self.model.module)
+                netInst = type(self.model)
                 try:
                     if layerName in self.depBlock.ignore[netInst]:
                         continue 
@@ -349,7 +349,8 @@ class BasicPruning(ABC):
         for p in model.named_parameters():
             layerName = '.'.join(p[0].split('.')[:-1])
             if layerName in self.depBlock.linkedConvs.keys() and layerName not in layers:
-                netInst = type(self.model.module)
+                # netInst = type(self.model.module)
+                netInst = type(self.model)
                 try:
                     if layerName in self.depBlock.ignore[netInst]:
                         continue 
@@ -406,7 +407,8 @@ class BasicPruning(ABC):
         for p in model.named_parameters():
             layerName = '.'.join(p[0].split('.')[:-1])
             if layerName in self.depBlock.linkedConvs.keys() and layerName not in layers:
-                netInst = type(self.model.module)
+                # netInst = type(self.model.module)
+                netInst = type(self.model)
                 try:
                     if layerName in self.depBlock.ignore[netInst]:
                         continue 
