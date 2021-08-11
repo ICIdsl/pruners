@@ -43,7 +43,7 @@ class BasicPruning(ABC):
         self.layerSizes = {}
         
         # create model directory and file
-        self.dirName = '{}/{}/{}'.format(params.pruner['model_path'], params.dataset, params.pruner['subset_name'])
+        self.dirName = '{}/{}/{}'.format(params.pruner['model_path'], params.dataset)
         self.filePath = os.path.join(self.dirName, self.fileName)
         
         ## create dir if it doesn't exist
