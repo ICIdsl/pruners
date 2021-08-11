@@ -11,7 +11,7 @@ Pruning a Custom Network
 
 Mandatory section in config (.ini) file
 ---------------------------------------
-- [pruner]
+- **[create_network_dataset]**
     * project_dir: path to top level directory (it is sufficient to start path at the src/ directory) 
     * model_path: path inside the top level directory defining where to store models 
     * subset_name: name of sub-classes of original dataset
