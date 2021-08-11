@@ -53,7 +53,6 @@ class BasicPruning(ABC):
         self.depBlock = dependSrc.DependencyBlock(model)
         self.get_layer_params()
 
-        # self.importPath = '{}.{}.{}'.format('.'.join(params.pruner['project_dir'].split('/')), '.'.join(self.dirName.split('/')), self.fileName.split('.')[0])
         self.importPath = '{}.{}'.format('.'.join(self.dirName.split('/')), self.fileName.split('.')[0])
     #}}} 
     
