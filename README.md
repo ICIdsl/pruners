@@ -12,9 +12,9 @@ Pruning a Custom Network
 Mandatory section in config (.ini) file
 ---------------------------------------
 - **[create_network_dataset]**
-    * mode: type of pruning strategy (current options are 'random', 'l1-norm', 'random_weighted')
-    * model_path: path inside the top level directory defining where to store models 
-    * pruning_perc: percentage of network to prune (can be a list of pruning levels as well)
+    * *mode*: type of pruning strategy (current options are 'random', 'l1-norm', 'random_weighted')
+    * *model_path*: path inside the top level directory defining where to store models 
+    * *pruning_perc*: percentage of network to prune (can be a list of pruning levels as well)
 
 Pruning the above structural modules / networks but with own model description file
 --------------------------------------------------------------
