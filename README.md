@@ -1,11 +1,11 @@
 Pruning a Custom Network 
 ========================
 - Pruning has been implemented for the following types of structural modules and networks:
-    * Sequential Connectivity - AlexNet, VGG
-    * Residuals - ResNet18, ResNet20, ResNet50
-    * Depth-wise convolutions - MobileNetV2, MNasNet 
-    * Fire modules - SqueezeNet
-    * Inception modules - GoogLeNet
+    * **Sequential Connectivity** - AlexNet, VGG
+    * **Residuals** - ResNet18, ResNet20, ResNet50
+    * **Depth-wise convolutions** - MobileNetV2, MNasNet 
+    * **Fire modules** - SqueezeNet
+    * **Inception modules** - GoogLeNet
 
 - The following sections describe how to prune your own description of these modules/networks and extend to other modules or networks
 
@@ -21,7 +21,7 @@ Pruning the above structural modules / networks but with own model description f
 > Note : The only restriction in terms of layers that can be used is that torch.Functional modules such as F.relu can't be used as these can't be automatically detected by running through model.named_modules(). 
 Please replace these with the equivalent torch.nn instead.
 
-- **Sequential Connectivity** / **AlexNet** no change required as long as each layer in alexnet is sequentially defined in model descriptino file as in models/cifar/alexnet.py
+- **Sequential Connectivity** no change required as long as each layer is sequentially defined (does not support nn.Sequential) declarations at the moment.
 
 - **Residuals** / **ResNet** 
     * The *BasicBlock* module or the *Bottleneck* module need to be defined as a separate class. 
